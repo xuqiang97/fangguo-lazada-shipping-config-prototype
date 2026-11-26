@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lazada预约面单物流方式与组包集货点配置 · 交互原型</title>
+</head>
+<body>
+<div id="lz-proto" style="font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;font-size:13px;color:#303133;background:#f5f6f8;padding:12px;">
+<style>
+#lz-proto *{box-sizing:border-box}
+#lz-proto .tabs{display:flex;gap:6px;margin-bottom:10px}
+#lz-proto .tab{padding:6px 14px;border-radius:4px;background:#fff;border:1px solid #dcdfe6;color:inherit;font:inherit;cursor:pointer}
+#lz-proto .tab.on{background:#2f6bff;color:#fff;border-color:#2f6bff}
+#lz-proto .panel{display:none;background:#fff;border-radius:6px;padding:14px}
+#lz-proto .panel.on{display:block}
+#lz-proto .wrap{display:flex;gap:14px}
+#lz-proto .side{width:120px;flex:none}
+#lz-proto .side div{padding:7px 10px;border-radius:14px;color:#606266}
+#lz-proto .side .cur{background:#2f6bff;color:#fff}
+#lz-proto table.cfg{border-collapse:collapse;width:100%}
+#lz-proto table.cfg td{border:1px solid #e4e7ed;padding:10px 12px;vertical-align:middle}
+#lz-proto td.l1{width:170px;background:#fafafa;font-weight:500}
+#lz-proto td.l2{width:170px;background:#fcfcfc}
+#lz-proto .switch{position:relative;width:40px;height:20px;border-radius:10px;background:#dcdfe6;display:inline-block;vertical-align:middle;cursor:pointer;transition:.2s}
+#lz-proto .switch::after{content:'';position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s}
+#lz-proto .switch.on{background:#2f6bff}
+#lz-proto .switch.on::after{left:22px}
+#lz-proto select{height:30px;border:1px solid #dcdfe6;border-radius:4px;padding:0 8px;min-width:300px}
+#lz-proto select.err{border-color:#f56c6c}
+#lz-proto .tip{color:#909399;font-size:12px;margin-top:6px;line-height:1.7}
+#lz-proto .errt{color:#f56c6c;font-size:12px;margin-top:4px;display:none}
+#lz-proto .btn{display:inline-block;padding:8px 40px;background:#2f6bff;color:#fff;border-radius:4px;cursor:pointer;border:none;font-size:13px}
+#lz-proto .toast{display:none;margin-left:12px;color:#67c23a}
+#lz-proto .q{display:inline-block;width:14px;height:14px;line-height:14px;text-align:center;border-radius:50%;background:#c0c4cc;color:#fff;font-size:10px;margin-left:4px;cursor:help;position:relative}
+#lz-proto .q .pop{display:none;position:absolute;left:18px;top:-6px;width:280px;background:#303133;color:#fff;font-size:12px;line-height:1.6;text-align:left;padding:8px 10px;border-radius:4px;z-index:9}
+#lz-proto .q:hover .pop{display:block}
+#lz-proto table.ord{border-collapse:collapse;width:100%;margin-top:8px}
+#lz-proto table.ord th{background:#f5f7fa;font-weight:500;text-align:left}
+#lz-proto table.ord th,#lz-proto table.ord td{border-bottom:1px solid #ebeef5;padding:9px 10px}
+#lz-proto .tag{display:inline-block;padding:0 6px;border-radius:3px;font-size:12px;line-height:20px}
+#lz-proto .t-fail{background:#fef0f0;color:#f56c6c;border:1px solid #fbc4c4}
+#lz-proto .t-ok{background:#f0f9eb;color:#67c23a;border:1px solid #c2e7b0}
+#lz-proto .filter{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#lz-proto .filter span.f{border:1px solid #dcdfe6;border-radius:4px;padding:5px 10px;background:#fff}
+#lz-proto .filter span.f.hl{border-color:#2f6bff;color:#2f6bff}
+#lz-proto .log{background:#fafafa;border:1px dashed #dcdfe6;padding:8px 10px;margin-top:10px;font-size:12px;color:#606266;line-height:1.8}
+#lz-proto .anno{background:#fff7e6;border:1px dashed #fa8c16;color:#ad4e00;font-size:12px;padding:6px 10px;border-radius:4px;margin-bottom:10px}
+#lz-proto .anno b{color:#d46b08}
+#lz-proto .ph{border:1px dashed #c0c4cc;background:repeating-linear-gradient(45deg,#fafafa,#fafafa 8px,#f2f3f5 8px,#f2f3f5 16px);color:#909399;text-align:center;padding:22px 10px;border-radius:4px}
+#lz-proto .srch{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+#lz-proto .ipt{border:1px solid #dcdfe6;border-radius:4px;padding:5px 10px;color:#a8abb2;background:#fff;min-width:110px;position:relative}
+#lz-proto .cas{cursor:pointer;color:#606266;font:inherit}
+#lz-proto .dd{display:none;width:fit-content;max-width:100%;margin:5px 0 12px;background:#fff;border:1px solid #e4e7ed;box-shadow:0 2px 12px rgba(0,0,0,.1)}
+#lz-proto .dd.show{display:flex}
+#lz-proto .dd .col1{border-right:1px solid #e4e7ed;width:110px;padding:4px 0}
+#lz-proto .dd .col2{width:210px;padding:4px 0}
+#lz-proto .dd .it{display:block;padding:6px 12px;color:#606266;white-space:nowrap}
+#lz-proto .dd .it.cur{color:#2f6bff;background:#f5f7fa}
+#lz-proto .dd .it.chg{outline:1px dashed #e6a23c;outline-offset:-2px;background:#fdf6ec}
+#lz-proto .dd label.it{cursor:pointer}
+#lz-proto table.ord caption{text-align:left;padding:5px 0;color:#606266}
+#lz-proto .bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}
+#lz-proto .bar .b{border:1px solid #dcdfe6;border-radius:4px;padding:5px 12px;background:#fff;color:#606266;cursor:pointer}
+#lz-proto .bar .b.pri{border-color:#a0bfff;color:#2f6bff;background:#ecf2ff}
+body{margin:0;background:#f5f6f8}
+#lz-proto .switch{border:0;padding:0}
+#lz-proto .tip{color:#606773}
+#lz-proto table.cfg td{line-height:1.6}
+</style>
+
+<div class="anno"><b>交互原型</b>　可试用工厂配置和订单审核筛选。订单和日志均为演示数据。</div>
+<div class="tabs">
+  <button type="button" class="tab on" data-p="p1" aria-controls="p1" aria-pressed="true">系统配置 → 13.跨境配置</button>
+  <button type="button" class="tab" data-p="p2" aria-controls="p2" aria-pressed="false">订单审核 → 预约状态</button>
+</div>
+
+<div class="panel on" id="p1">
+  <div class="wrap">
+    <div class="side">
+      <div>1.自动化配置</div><div>2.订单审核</div><div>…</div><div>12.库存配置</div>
+      <div class="cur">13.跨境配置</div><div>14.权限配置</div><div>…</div>
+    </div>
+    <div style="flex:1">
+      <table class="cfg">
+        <tr><td class="l1">美客多只打印首页面单</td><td colspan="2"><label><input type="radio" name="mk"> 是</label>&nbsp;&nbsp;<label><input type="radio" name="mk" checked> 否</label></td></tr>
+        <tr><td class="l1">虾皮配置</td><td class="l2">虾皮面单配置</td><td><label><input type="checkbox"> 回传面单只打印1/4</label></td></tr>
+        <tr><td class="l1">Ozon配置</td><td class="l2">Ozon面单配置</td><td><label><input type="checkbox"> 铺满面单</label></td></tr>
+        <tr>
+          <td class="l1" rowspan="2">Lazada配置</td>
+          <td class="l2">预约面单物流方式配置<span class="q">?<span class="pop">适用于本工厂的 Lazada 订单。开启后，当平台要求卖家选择时，按指定的物流方式预约面单。</span></span></td>
+          <td>
+            <button class="switch" id="sw" type="button" role="switch" aria-label="启用预约面单物流方式配置" aria-checked="false"></button>
+            <span id="swText" style="margin-left:8px;color:#909399">未启用（预约面单沿用现有规则）</span>
+            <div id="pv" style="display:none;margin-top:12px">
+              <span style="color:#f56c6c">*</span> 默认物流方式：
+              <select id="sel" aria-label="默认物流方式">
+                <option value="">请选择物流方式</option>
+                <option value="LGS-FM40">LGS-FM40（东莞沙田大有枢纽分拨）</option>
+                <option value="LGS-FM41">LGS-FM41（义乌递四方分拨）</option>
+                <option value="LGS-FM42">LGS-FM42（香港递四方分拨）</option>
+                <option value="LGS-FM48">LGS-FM48（泉州递四方分拨）</option>
+              </select>
+              <div class="errt" id="err">启用后请选择默认物流方式</div>
+              <div class="tip">
+                物流由平台分配时直接走平台流程。需卖家选择时使用指定方式。订单不支持指定方式时，可在订单审核按「预约失败 → Lazada物流方式不可用」筛选。<br>
+                平台未返回分配方式时，停止该单预约，提示「Lazada 未返回物流分配方式」。
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="l2">组包集货点配置<span class="q">?<span class="pop">仅用于商家自送至集货点。自行送至分拨中心时无需选择集货点。</span></span></td>
+          <td>
+            <button class="switch" id="sw2" type="button" role="switch" aria-label="自送至集货点的组包配置" aria-checked="false"></button>
+            <span id="swText2" style="margin-left:8px;color:#909399">未启用（自送至集货点沿用现有规则）</span>
+            <div id="pv2" style="display:none;margin-top:12px">
+              <span style="color:#f56c6c">*</span> 默认集货点：
+              <select id="sel2" aria-label="默认集货点">
+                <option value="">请选择集货点</option>
+                <option value="LZD坂田集货点-小风车">LZD坂田集货点-小风车（深圳龙岗）</option>
+                <option value="LZD义乌集货点-小风车">LZD义乌集货点-小风车（浙江义乌）</option>
+                <option value="深圳华强北集货点">深圳华强北集货点（深圳福田）</option>
+              </select>
+              <div class="errt" id="err2">请选择自送至集货点时使用的默认集货点</div>
+              <div class="tip">
+                手动上传「自送至集货点」的大包时，使用所选点的编码、地址、联系人和电话。<br>
+                查不到指定点，该包保持「待组包」，上传任务失败明细显示指定点和可选点（没有可选点时显示“无”）。查询失败时显示平台错误。同批其他包继续处理。
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr><td class="l1">时区配置</td><td colspan="2" style="color:#c0c4cc">付款时区配置 / 承诺发货时区配置 / 推单时区配置 …</td></tr>
+      </table>
+      <div style="text-align:center;margin-top:14px"><button class="btn" id="save">提交修改</button><span class="toast" id="ok">修改成功</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="p2">
+  <button class="ipt cas" id="cas" type="button" aria-controls="dd" aria-expanded="true">预约状态 ▾</button>
+  <div class="dd show" id="dd" role="group" aria-label="预约状态">
+    <div class="col1">
+      <label class="it cur"><input type="checkbox" id="failedStatus"> 预约失败 ›</label>
+      <label class="it"><input type="checkbox" name="otherStatus" value="预约成功"> 预约成功</label>
+      <label class="it"><input type="checkbox" name="otherStatus" value="未预约"> 未预约</label>
+    </div>
+    <div class="col2" role="group" aria-label="预约失败原因">
+      <label class="it"><input type="checkbox" name="reason" value="地址停发"> 地址停发</label>
+      <label class="it"><input type="checkbox" name="reason" value="面单余额不足"> 面单余额不足</label>
+      <label class="it"><input type="checkbox" name="reason" value="无可用快递"> 无可用快递</label>
+      <label class="it"><input type="checkbox" name="reason" value="获取面单店铺授权失效"> 获取面单店铺授权失效</label>
+      <label class="it"><input type="checkbox" name="reason" value="其他失败原因"> 其他失败原因</label>
+      <label class="it chg"><input type="checkbox" name="reason" value="Lazada物流方式不可用"> Lazada物流方式不可用</label>
+    </div>
+  </div>
+  <table class="ord">
+    <caption id="resultCount" aria-live="polite">示例订单 · 显示 3 笔</caption>
+    <thead><tr><th scope="col">示例订单</th><th scope="col">预约状态</th><th scope="col">失败原因（示例）</th></tr></thead>
+    <tbody id="orders">
+      <tr data-status="预约失败" data-reason="Lazada物流方式不可用"><td>A</td><td><span class="tag t-fail">预约失败</span></td><td>Lazada物流方式不可用</td></tr>
+      <tr data-status="预约失败" data-reason="地址停发"><td>B</td><td><span class="tag t-fail">预约失败</span></td><td>地址停发</td></tr>
+      <tr data-status="预约成功"><td>C</td><td><span class="tag t-ok">预约成功</span></td><td>—</td></tr>
+    </tbody>
+  </table>
+  <div class="log" id="logA">
+    <b>订单 A · 订单操作日志与任务失败明细示例</b><br>
+    Lazada物流方式不可用。指定 LGS-FM40，可选 LGS-FM42、LGS-FM41。<br>
+    该单恢复支持 LGS-FM40 后，可在订单审核重新预约。
+  </div>
+</div>
+
+<script>
+(function(){
+  var r=document.getElementById('lz-proto');
+  r.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){
+    r.querySelectorAll('.tab,.panel').forEach(function(e){e.classList.remove('on')});
+    r.querySelectorAll('.tab').forEach(button => button.setAttribute('aria-pressed', String(button === t)));
+    t.classList.add('on');document.getElementById(t.dataset.p).classList.add('on');}});
+  var sw=document.getElementById('sw'),pv=document.getElementById('pv'),tx=document.getElementById('swText'),
+      sel=document.getElementById('sel'),err=document.getElementById('err'),ok=document.getElementById('ok');
+  sw.onclick=function(){var on=sw.classList.toggle('on');sw.setAttribute('aria-checked',String(on));pv.style.display=on?'block':'none';
+    tx.textContent=on?'已启用':'未启用（预约面单沿用现有规则）';
+    tx.style.color=on?'#2f6bff':'#909399';err.style.display='none';sel.classList.remove('err');};
+  sel.onchange=function(){if(sel.value){err.style.display='none';sel.classList.remove('err');}};
+
+  var sw2=document.getElementById('sw2'),pv2=document.getElementById('pv2'),tx2=document.getElementById('swText2'),
+      sel2=document.getElementById('sel2'),err2=document.getElementById('err2');
+  sw2.onclick=function(){var on=sw2.classList.toggle('on');sw2.setAttribute('aria-checked',String(on));pv2.style.display=on?'block':'none';
+    tx2.textContent=on?'已启用（自送至集货点）':'未启用（自送至集货点沿用现有规则）';
+    tx2.style.color=on?'#2f6bff':'#909399';err2.style.display='none';sel2.classList.remove('err');};
+  sel2.onchange=function(){if(sel2.value){err2.style.display='none';sel2.classList.remove('err');}};
+  document.getElementById('save').onclick=function(){ok.style.display='none';var bad=false;
+    if(sw.classList.contains('on')&&!sel.value){err.style.display='block';sel.classList.add('err');bad=true;}
+    if(sw2.classList.contains('on')&&!sel2.value){err2.style.display='block';sel2.classList.add('err');bad=true;}
+    if(bad)return;
+    ok.style.display='inline';setTimeout(function(){ok.style.display='none'},1500);};
+
+  const statusButton = document.getElementById('cas');
+  const statusMenu = document.getElementById('dd');
+  statusButton.addEventListener('click', function () {
+    const open = statusMenu.classList.toggle('show');
+    statusButton.setAttribute('aria-expanded', String(open));
+  });
+
+  const failedStatus = document.getElementById('failedStatus');
+  const reasons = Array.from(statusMenu.querySelectorAll('input[name="reason"]'));
+  const otherStatuses = Array.from(statusMenu.querySelectorAll('input[name="otherStatus"]'));
+  const orders = Array.from(document.getElementById('orders').rows);
+  statusMenu.addEventListener('change', function (event) {
+    if (event.target === failedStatus) {
+      reasons.forEach(reason => { reason.checked = failedStatus.checked; });
+    }
+    const selectedReasons = reasons.filter(reason => reason.checked).map(reason => reason.value);
+    const selectedStatuses = otherStatuses.filter(status => status.checked).map(status => status.value);
+    failedStatus.checked = selectedReasons.length === reasons.length;
+    failedStatus.indeterminate = selectedReasons.length > 0 && !failedStatus.checked;
+
+    const showAll = selectedReasons.length === 0 && selectedStatuses.length === 0;
+    orders.forEach(order => {
+      const {status, reason} = order.dataset;
+      order.hidden = !(showAll || selectedStatuses.includes(status) || selectedReasons.includes(reason));
+    });
+    const count = orders.filter(order => !order.hidden).length;
+    document.getElementById('resultCount').textContent = '示例订单 · 显示 ' + count + ' 笔';
+    document.getElementById('logA').hidden = orders[0].hidden;
+  });
+})();
+</script>
+</div>
+</body>
+</html>
